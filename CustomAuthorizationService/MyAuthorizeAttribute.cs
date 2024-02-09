@@ -6,18 +6,20 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace CustomAuthorizationService
 {
-    public class MyAuthorizeAttribute : AuthorizeAttribute
+    public class MyAuthorizeAttribute : Attribute, IAuthorizationFilter
     {
-        private readonly string _role;
+        //private readonly string _role;
 
-        public MyAuthorizeAttribute(string role)
-        {
-            _role = role;
-        }
+        //public MyAuthorizeAttribute(string role)
+        //{
+        //    _role = role;
+        //}
 
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            if (_role != "admin")
+            var token = context.HttpContext.Request.Headers["Authorization"];
+
+            if (token == "access")
             {
                 context.Result = new BadRequestResult();
                 return;
